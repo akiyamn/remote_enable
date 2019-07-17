@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import psutil
 import subprocess
 import datetime
@@ -5,8 +7,8 @@ import os
 import socket
 
 WORKING_DIR = "/home/yui/Desktop/minecraft-july-2019/MCServer2019"
-PROCESS_NAME = "test.sh"
-EXECUTABLE = "konsole --hold -e ./test.sh"
+PROCESS_NAME = "run.sh"
+EXECUTABLE = "konsole --hold -e ./run.sh"
 TIMEOUT = 120
 
 
