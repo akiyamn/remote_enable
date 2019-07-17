@@ -20,7 +20,7 @@ def process_open():
     return False
 
 def start():
-    program_open = process_open(PROCESS_NAME)
+    program_open = process_open()
     if not program_open:
         subprocess.Popen(EXECUTABLE.split(" "))
         log(f"Executed {EXECUTABLE}.")
@@ -43,7 +43,7 @@ def server_loop(port):
                     log(f"User at {long_address} connected.")
                     while connection:
                         data = connection.recv(1024)
-                        clean_data = data.decode(errors="ignore").splitlines()[0]
+                        clean_data = data.decode(errors="ignore").split()[0]
                         log(f"{long_address} => {clean_data}")
                         response = interpret(clean_data, PROCESS_NAME, EXECUTABLE)
                         connection.sendall(response)
@@ -65,7 +65,7 @@ def interpret(command, process_name, executable):
             return b"error"
         else:
             start()
-            return "done"
+            return b"done"
     elif command == b"exit":
         raise ConnectionAbortedError
     else:
