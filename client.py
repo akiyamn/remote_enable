@@ -8,15 +8,23 @@ def connect(ip, port):
         s.connect((ip, port))
         address = f"{ip}:{port}"
         log(f"Connected to {address}.")
-
+        help()
         command = ""
-        while command != "exit":
+        while True:
             command = input("> ").lower()
-            s.sendall(command.encode(errors="ignore"))
-            data = s.recv(1024)
-            response = data.decode(errors="ignore").split()[0]
-            process(response)
+            if command == "help":
+                help()
+            else:
+                try:
+                    s.sendall(command.encode(errors="ignore"))
+                    data = s.recv(1024)
+                    response = data.decode(errors="ignore").replace("\n", "").replace("\r", "")
+                    process(response)
+                except BrokenPipeError:
+                    log(f"{address} timed you out or disconnected.")
 
+def help():
+    print("\nCommands are:\nstatus : Checks the status of the server on the other end\nstart : Sends a message to start the application\nexit : Closes the connection\nhelp: Display this message\n")
 
 def process(message):
     responses = {
@@ -27,10 +35,11 @@ def process(message):
         "what": "Server did not understand the previous request.",
     }
 
-    try:
-        return responses[message]
-    except KeyError:
-        log(f"Error: Unknown message received from server: \"{message}\".")
+    if message != "":
+        try:
+            log(responses[message])
+        except KeyError:
+            log(f"Error: Unknown message received from server: \"{message}\".")
 
 
 def log(message):

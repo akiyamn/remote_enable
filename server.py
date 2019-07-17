@@ -43,7 +43,7 @@ def server_loop(port):
                     log(f"User at {long_address} connected.")
                     while connection:
                         data = connection.recv(1024)
-                        clean_data = data.decode(errors="ignore").split()[0]
+                        clean_data = data.decode(errors="ignore").replace("\n", "").replace("\r", "")
                         log(f"{long_address} => {clean_data}")
                         response = interpret(clean_data, PROCESS_NAME, EXECUTABLE)
                         connection.sendall(response)
@@ -52,6 +52,8 @@ def server_loop(port):
                 log(f"{long_address} timed out.")
             except ConnectionAbortedError:
                 log(f"{long_address} closed the connection.")
+            except BrokenPipeError:
+                log(f"{long_address} forcefully aborted the connection.")
             log(f"User at {address[0]}:{address[1]} disconnected.")
 
 def interpret(command, process_name, executable):
@@ -66,7 +68,7 @@ def interpret(command, process_name, executable):
         else:
             start()
             return b"done"
-    elif command == b"exit":
+    elif command == "exit":
         raise ConnectionAbortedError
     else:
         return b"what"
