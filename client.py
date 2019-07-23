@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Written by akiyamn on GitHub
+# v1.0.0
+
 import socket
 import datetime
 
