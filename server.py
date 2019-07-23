@@ -7,9 +7,10 @@ import os
 import socket
 
 WORKING_DIR = "/home/yui/Desktop/minecraft-july-2019/MCServer2019"
-PROCESS_NAME = "run.sh"
-EXECUTABLE = "konsole --hold -e ./run.sh"
+PROCESS_NAME = "test.sh"
+EXECUTABLE = "konsole -e ./test.sh"
 TIMEOUT = 120
+DEFAULT_PORT = 25564
 
 
 def log(message):
@@ -30,14 +31,15 @@ def start():
         log(f"Tried to run {EXECUTABLE} executable even though it was already open.")
 
 def server_loop(port):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(("", port))
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(("", port))
         log(f"Socket created on port {port}...")
-        s.listen()
+        sock.listen(5)
         listening = True
         log("Server is now running.")
         while listening:
-            connection, address = s.accept()
+            connection, address = sock.accept()
             long_address = f"{address[0]}:{address[1]}"
             try:
                 with connection:
@@ -81,4 +83,4 @@ def display():
 
 if __name__ == "__main__":
     os.chdir(WORKING_DIR)
-    server_loop(25564)
+    server_loop(DEFAULT_PORT)

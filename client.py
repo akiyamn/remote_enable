@@ -30,10 +30,10 @@ def help():
 
 def process(message):
     responses = {
-        "on": "Server is currently ON.",
-        "off": "Server is currently OFF.",
-        "done": "Server has been turned on.",
-        "error": "An error occurred trying to turn on the server. It may already be on.",
+        "on": "Application is currently ON.",
+        "off": "Application is currently OFF.",
+        "done": "Application has been turned on.",
+        "error": "An error occurred trying to run the application. It may already be running.",
         "what": "Server did not understand the previous request.",
     }
 
